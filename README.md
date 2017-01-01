@@ -25,3 +25,12 @@ To access the docker container using the BASH shell issue the command when the c
 ```
 sudo docker exec -it <containerID> /bin/bash
 ```
+
+
+## Configure Jenkins
+
+To install the common plugins into jenkins execute the setup script included in the bundle
+
+```
+docker exec <containerID> /home/cideveloper/jenkins-setup.sh
+```
