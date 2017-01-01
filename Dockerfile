@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     ant \
     gradle \
-    subversion
+    subversion \
+    nodejs
 
 ##--------------------------------------
 ## Create the dev user
