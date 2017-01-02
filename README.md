@@ -8,6 +8,20 @@ A docker container for continuous integration tests
 docker build -t elmodaddyb/testintegration .
 ```
 
+### Run the Container 
+
+```
+docker run --privileged -p 8080:8080 -d -t elmodaddyb/testintegration:v1
+```
+
+#### Why `--privileged`
+Chrome uses sandboxing, therefore if you try and run Chrome within a non-privileged container you will receive the following message:
+
+"Failed to move to new namespace: PID namespaces supported, Network namespace supported, but failed: errno = Operation not permitted".
+
+The --privileged flag gives the container almost the same privileges to the host machine resources as other processes 
+running outside the container, which is required for the sandboxing to run smoothly.
+
 
 ## Accessing the Container
 
