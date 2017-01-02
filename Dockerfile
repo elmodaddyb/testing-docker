@@ -30,8 +30,8 @@ RUN apt-get update && apt-get install -y \
 ## Create the dev user
 ##--------------------------------------
 
-RUN groupadd cideveloper -g 1001\
-  && useradd -g cideveloper -s /bin/bash cideveloper -d /home/cideveloper
+RUN groupadd cideveloper -g 1001
+RUN useradd -g cideveloper -s /bin/bash cideveloper -d /home/cideveloper
 
 WORKDIR /home/cideveloper
 RUN ["chown", "cideveloper:cideveloper", "-R", "/home/cideveloper"]
