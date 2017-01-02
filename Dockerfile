@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     ant \
     gradle \
     subversion \
-    nodejs
+    nodejs \
+    npm
 
 ##--------------------------------------
 ## Create the dev user
@@ -31,6 +32,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN groupadd cideveloper -g 1001\
   && useradd -g cideveloper -s /bin/bash cideveloper -d /home/cideveloper
+
+WORKDIR /home/cideveloper
+RUN ["chown", "cideveloper:cideveloper", "-R", "/home/cideveloper"]
 
 RUN echo "cideveloper:changeit" | chpasswd
 
@@ -46,8 +50,19 @@ RUN apt-get update && apt-get install -y jenkins
 ##--------------------------------------
 ## Configure Jenkins
 ##--------------------------------------
+##  requires post-build setup via docker exec
+##  TODO: use Jenkins Docker method to download plugins directly
+
 COPY jenkins-setup.sh /home/cideveloper/
 RUN chmod u+x /home/cideveloper/jenkins-setup.sh
+
+
+##--------------------------------------
+## Install Google Chrome
+##--------------------------------------
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+RUN apt-get update && apt-get install -y google-chrome-stable
 
 
 ##--------------------------------------
@@ -59,6 +74,6 @@ WORKDIR /usr/share/jenkins
 RUN ["chown", "cideveloper:cideveloper", "-R", "/usr/share/jenkins"]
 USER cideveloper
 
-ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war", "--httpKeepAliveTimeout=15000"]
+ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war", "--httpKeepAliveTimeout=30000"]
 EXPOSE 8080
 CMD [""]

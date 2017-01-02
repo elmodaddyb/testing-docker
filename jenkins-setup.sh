@@ -14,3 +14,6 @@ java -jar $JENKINS_CLI_JAR -s $JENKINS_URL install-plugin ant --username admin -
 java -jar $JENKINS_CLI_JAR -s $JENKINS_URL install-plugin subversion --username admin --password $INIT_ADMIN_PWD
 java -jar $JENKINS_CLI_JAR -s $JENKINS_URL install-plugin xvfb --username admin --password $INIT_ADMIN_PWD
 java -jar $JENKINS_CLI_JAR -s $JENKINS_URL install-plugin nodejs --username admin --password $INIT_ADMIN_PWD
+java -jar $JENKINS_CLI_JAR -s $JENKINS_URL install-plugin gradle --username admin --password $INIT_ADMIN_PWD
+
+java -jar $JENKINS_CLI_JAR -s $JENKINS_URL restart --username admin --password $INIT_ADMIN_PWD
