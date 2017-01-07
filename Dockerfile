@@ -30,10 +30,9 @@ RUN apt-get update && apt-get install -y \
 ## Create the jenkins user
 ##--------------------------------------
 ENV JENKINS_DATA=/opt/jenkins
-RUN useradd -r -u 201 -m -c "jenkins account" -d ${JENKINS_DATA} -s /bin/false jenkins \
-    && chown -R jenkins:jenkins ${JENKINS_DATA}
+RUN useradd -r -u 201 -m -c "jenkins account" -d ${JENKINS_DATA} -s /bin/false jenkins
     
-VOLUME ${JENKINS_DATA}
+
 
 ##--------------------------------------
 ## Install Jenkins
@@ -49,10 +48,11 @@ RUN apt-get update && apt-get install -y jenkins
 ##--------------------------------------
 ##  requires post-build setup via docker exec
 ##  TODO: use Jenkins Docker method to download plugins directly
-
+WORKDIR ${JENKINS_DATA}
 COPY jenkins-setup.sh ${JENKINS_DATA}/
 RUN chmod u+x ${JENKINS_DATA}/jenkins-setup.sh
-
+RUN chown -Rv jenkins:jenkins ${JENKINS_DATA}
+VOLUME ${JENKINS_DATA}
 
 ##--------------------------------------
 ## Install Google Chrome

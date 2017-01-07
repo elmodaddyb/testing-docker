@@ -19,7 +19,7 @@ docker volume create --name jenkins-data
 #### Run the Container
 
 ```
-docker run --privileged -d -p 8080:8080 --name jenkins -v jenkins-data:/opt/jenkins elmodaddyb/builddocker.test
+docker run --privileged -d -p 8080:8080 --name jenkins -v jenkins-data:/opt/jenkins elmodaddyb/testing.integration
 ```
 
 #### Why `--privileged`

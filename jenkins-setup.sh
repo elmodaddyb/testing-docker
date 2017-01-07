@@ -1,7 +1,7 @@
 #!/bin/bash
 
-INIT_ADMIN_PWD="$(cat /usr/share/jenkins/secrets/initialAdminPassword)"
-JENKINS_CLI_JAR=/usr/share/jenkins/war/WEB-INF/jenkins-cli.jar
+INIT_ADMIN_PWD="$(cat $JENKINS_HOME/secrets/initialAdminPassword)"
+JENKINS_CLI_JAR=$JENKINS_HOME/war/WEB-INF/jenkins-cli.jar
 JENKINS_URL=http://localhost:8080/
 
 echo "Install Jenkins Plugins for Test Integration"
