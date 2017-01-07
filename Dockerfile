@@ -27,16 +27,13 @@ RUN apt-get update && apt-get install -y \
     npm
 
 ##--------------------------------------
-## Create the dev user
+## Create the jenkins user
 ##--------------------------------------
-
-RUN groupadd cideveloper -g 1001
-RUN useradd -g cideveloper -s /bin/bash cideveloper -d /home/cideveloper
-
-WORKDIR /home/cideveloper
-RUN ["chown", "cideveloper:cideveloper", "-R", "/home/cideveloper"]
-
-RUN echo "cideveloper:changeit" | chpasswd
+ENV JENKINS_DATA=/opt/jenkins
+RUN useradd -r -u 201 -m -c "jenkins account" -d ${JENKINS_DATA} -s /bin/false jenkins \
+    && chown -R jenkins:jenkins ${JENKINS_DATA}
+    
+VOLUME ${JENKINS_DATA}
 
 ##--------------------------------------
 ## Install Jenkins
@@ -53,8 +50,8 @@ RUN apt-get update && apt-get install -y jenkins
 ##  requires post-build setup via docker exec
 ##  TODO: use Jenkins Docker method to download plugins directly
 
-COPY jenkins-setup.sh /home/cideveloper/
-RUN chmod u+x /home/cideveloper/jenkins-setup.sh
+COPY jenkins-setup.sh ${JENKINS_DATA}/
+RUN chmod u+x ${JENKINS_DATA}/jenkins-setup.sh
 
 
 ##--------------------------------------
@@ -68,11 +65,11 @@ RUN apt-get update && apt-get install -y google-chrome-stable
 ##--------------------------------------
 ## Set up the environment
 ##--------------------------------------
+
 ENV SHELL /bin/bash
-ENV JENKINS_HOME /usr/share/jenkins
-WORKDIR /usr/share/jenkins
-RUN ["chown", "cideveloper:cideveloper", "-R", "/usr/share/jenkins"]
-USER cideveloper
+ENV JENKINS_HOME ${JENKINS_DATA}
+WORKDIR ${JENKINS_DATA}
+USER jenkins
 
 ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war", "--httpKeepAliveTimeout=30000"]
 EXPOSE 8080
