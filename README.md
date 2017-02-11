@@ -8,7 +8,7 @@ A docker container for continuous integration tests
 docker build -t elmodaddyb/testintegration .
 ```
 
-### Run the Container 
+### Run the Container
 
 #### Create a data volume
 
@@ -19,7 +19,7 @@ docker volume create --name jenkins-data
 #### Run the Container
 
 ```
-docker run --privileged -d -p 8080:8080 --name jenkins -v jenkins-data:/opt/jenkins elmodaddyb/testing.integration
+docker run --privileged -d -p 8080:8080 --name jenkins -v jenkins-data:/opt/jenkins elmodaddyb/testingintegration
 ```
 
 #### Why `--privileged`
@@ -27,7 +27,7 @@ Chrome uses sandboxing, therefore if you try and run Chrome within a non-privile
 
 "Failed to move to new namespace: PID namespaces supported, Network namespace supported, but failed: errno = Operation not permitted".
 
-The --privileged flag gives the container almost the same privileges to the host machine resources as other processes 
+The --privileged flag gives the container almost the same privileges to the host machine resources as other processes
 running outside the container, which is required for the sandboxing to run smoothly.
 
 
@@ -36,7 +36,7 @@ running outside the container, which is required for the sandboxing to run smoot
 
 #### Jenkins Access
 
-Visit the jenkins website 
+Visit the jenkins website
 
 `http://localhost:8080`
 
@@ -54,5 +54,25 @@ sudo docker exec -it <containerID> /bin/bash
 To install the common plugins into jenkins execute the setup script included in the bundle
 
 ```
-docker exec <containerID> /home/cideveloper/jenkins-setup.sh
+docker exec <containerID> /opt/jenkins/jenkins-setup.sh
+```
+
+
+### Setup Node Gradle User home
+
+When gradle runs, it uses a cache.  The cache is locked for various reasons.  If you configure multiple executors on one jenkins instance,
+then this could cause blocking and delays.  A recommendation is to enable a `$GRADLE_USER_HOME` variable at the **Node** level that uses the `$EXECUTOR_NUMBER`.
+This will result in a Gradle cache that is specific to an executor.  
+
+This takes advantage of the cache, but avoids the blocking situations.
+
+#### To Add the GRADLE_USER_HOME variable
+
+> Manage Jenkins -- Manage Nodes -- Environment Variables
+
+Add the variable:
+
+```
+key = GRADLE_USER_HOME
+value = $JENKINS_HOME/nodes/gradle/$EXECUTOR_NUMBER
 ```

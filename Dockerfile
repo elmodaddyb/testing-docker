@@ -6,7 +6,7 @@
 ##--------------------------------------
 ## Start with UBUNTU image as the base
 ##--------------------------------------
-FROM ubuntu:16.10
+FROM ubuntu:latest
 
 ##--------------------------------------
 ## Maintainer - Eamonn Buss
@@ -24,14 +24,15 @@ RUN apt-get update && apt-get install -y \
     gradle \
     subversion \
     nodejs \
-    npm
+    npm \
+    openjdk-8-jdk
 
 ##--------------------------------------
 ## Create the jenkins user
 ##--------------------------------------
 ENV JENKINS_DATA=/opt/jenkins
 RUN useradd -r -u 201 -m -c "jenkins account" -d ${JENKINS_DATA} -s /bin/false jenkins
-    
+
 
 
 ##--------------------------------------
@@ -61,6 +62,10 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 RUN apt-get update && apt-get install -y google-chrome-stable
 
+##--------------------------------------
+## Set local time to EST
+##--------------------------------------
+RUN ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime
 
 ##--------------------------------------
 ## Set up the environment
